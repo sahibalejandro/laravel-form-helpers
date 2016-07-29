@@ -1,0 +1,25 @@
+{
+    "name": "sahibalejandro/laravel-form-helpers",
+    "description": "Form helpers for laravel",
+    "keywords": ["laravel", "form", "html", "eloquent"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sahib J. Leo",
+            "email": "sahib@sahib.io"
+        }
+    ],
+    "require": {
+        "php": "^5.5.9",
+        "illuminate/database": "^5.2",
+        "illuminate/session": "^5.2",
+        "illuminate/support": "^5.2",
+        "illuminate/view": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sahib\\Form\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
