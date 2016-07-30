@@ -1,26 +1,14 @@
 <?php
 
-use Sahib\Form\Form;
 use Illuminate\Database\Eloquent\Model;
 
 class TextTest extends TestCase
 {
-    /*
-     * Combinations:
-     *
-     * -old and -model            = null/default
-     * -old and +model/-attribute = null/default
-     * +old and +model/+attribute = old
-     * -old and +model/+attribute = model's attribute
-     */
-
     /** @test */
     public function it_generates_valid_attributes()
     {
-        $form = app(Form::class);
-
-        $this->assertEquals('', $form->text('description'));
-        $this->assertEquals('default', $form->text('description', 'default'));
+        $this->assertBladeRender('', "@text('description')");
+        $this->assertBladeRender('default', "@text('description', 'default')");
     }
 
     /** @test */
@@ -29,21 +17,18 @@ class TextTest extends TestCase
         $model = $this->prophesize(Model::class);
         $model->getAttribute('description')->willReturn(null);
 
-        $form = app(Form::class);
-        $form->model($model->reveal());
+        $viewData = ['model' => $model->reveal()];
 
-        $this->assertEquals('', $form->text('description'));
-        $this->assertEquals('default', $form->text('description', 'default'));
+        $this->assertBladeRender('', '@form($model) @text("description")', $viewData);
+        $this->assertBladeRender('default', '@form($model) @text("description", "default")', $viewData);
     }
 
     /** @test */
     public function it_generates_valid_attributes_when_old_input_exists()
     {
-        $this->session(['_old_input' => ['description' => 'Product description']]);
+        $this->session(['_old_input' => ['description' => 'Description']]);
 
-        $form = app(Form::class);
-
-        $this->assertEquals('Product description', $form->text('description'));
+        $this->assertBladeRender('Description', '@text("description")');
     }
 
     /** @test */
@@ -51,24 +36,22 @@ class TextTest extends TestCase
     {
         $this->session(['_old_input' => ['description' => 'Description from old input']]);
 
-        $form = app(Form::class);
-
         $model = $this->prophesize(Model::class);
         $model->getAttribute('description')->willReturn('Description from model');
-        $form->model($model->reveal());
 
-        $this->assertEquals('Description from old input', $form->text('description'));
+        $viewData = ['model' => $model->reveal()];
+
+        $this->assertBladeRender('Description from old input', '@form($model) @text("description")', $viewData);
     }
 
     /** @test */
     public function it_generates_valid_attributes_when_model_exists()
     {
-        $form = app(Form::class);
-
         $model = $this->prophesize(Model::class);
         $model->getAttribute('description')->willReturn('Description');
-        $form->model($model->reveal());
 
-        $this->assertEquals('Description', $form->text('description'));
+        $viewData = ['model' => $model->reveal()];
+
+        $this->assertBladeRender('Description', '@form($model) @text("description")', $viewData);
     }
 }

@@ -1,26 +1,15 @@
 <?php
 
-use Sahib\Form\Form;
 use Illuminate\Database\Eloquent\Model;
 
 class CheckboxTest extends TestCase
 {
-    /*
-     * Combinations:
-     *
-     * -old and -model            = null/default
-     * -old and +model/-attribute = null/default
-     * +old and +model/+attribute = old
-     * -old and +model/+attribute = model's attribute
-     */
-
     /** @test */
     public function it_generates_valid_attributes()
     {
-        $form = app(Form::class);
-
-        $this->assertEquals('name="accept" value="1"', $form->checkbox('accept'));
-        $this->assertEquals('name="accept" value="ok"', $form->checkbox('accept', 'ok'));
+        $this->assertBladeRender('name="accept" value="1"', "@checkbox('accept')");
+        $this->assertBladeRender('name="accept" value="ok"', "@checkbox('accept', 'ok')");
+        $this->assertBladeRender('name="accept" value="1" checked', "@checkbox('accept', 1, true)");
     }
 
     /** @test */
@@ -29,11 +18,10 @@ class CheckboxTest extends TestCase
         $model = $this->prophesize(Model::class);
         $model->getAttribute('accept')->willReturn(null);
 
-        $form = app(Form::class);
-        $form->model($model->reveal());
+        $viewData = ['model' => $model->reveal()];
 
-        $this->assertEquals('name="accept" value="1"', $form->checkbox('accept'));
-        $this->assertEquals('name="accept" value="ok"', $form->checkbox('accept', 'ok'));
+        $this->assertBladeRender('name="accept" value="1"', '@form($model) @checkbox("accept")', $viewData);
+        $this->assertBladeRender('name="accept" value="ok"', '@form($model) @checkbox("accept", "ok")', $viewData);
     }
 
     /** @test */
@@ -41,39 +29,33 @@ class CheckboxTest extends TestCase
     {
         $this->session(['_old_input' => ['accept' => '1', 'accept2' => 'not_ok']]);
 
-        $form = app(Form::class);
-
-        $this->assertEquals('name="accept" value="1" checked', $form->checkbox('accept'));
-        $this->assertEquals('name="accept2" value="ok"', $form->checkbox('accept2', 'ok'));
+        $this->assertBladeRender('name="accept" value="1" checked', "@checkbox('accept')");
+        $this->assertBladeRender('name="accept2" value="ok"', "@checkbox('accept2', 'ok')");
     }
 
     /** @test */
     public function it_generates_valid_attributes_when_old_input_and_model_exists()
     {
-        $this->session(['_old_input' => ['accept' => '1']]);
-
-        $form = app(Form::class);
-
         $model = $this->prophesize(Model::class);
         $model->getAttribute('accept')->willReturn(null);
 
-        $form->model($model->reveal());
+        $this->session(['_old_input' => ['accept' => '1']]);
 
-        $this->assertEquals('name="accept" value="1" checked', $form->checkbox('accept'));
+        $viewData = ['model' => $model->reveal()];
+
+        $this->assertBladeRender('name="accept" value="1" checked', '@form($model) @checkbox("accept")', $viewData);
     }
 
     /** @test */
     public function it_generates_valid_attributes_when_model_exists()
     {
-        $form = app(Form::class);
-
         $model = $this->prophesize(Model::class);
         $model->getAttribute('accept')->willReturn(1);
         $model->getAttribute('accept2')->willReturn(null);
 
-        $form->model($model->reveal());
+        $viewData = ['model' => $model->reveal()];
 
-        $this->assertEquals('name="accept" value="1" checked', $form->checkbox('accept'));
-        $this->assertEquals('name="accept2" value="1"', $form->checkbox('accept2'));
+        $this->assertBladeRender('name="accept" value="1" checked', '@form($model) @checkbox("accept")', $viewData);
+        $this->assertBladeRender('name="accept2" value="1"', '@form($model) @checkbox("accept2")', $viewData);
     }
 }

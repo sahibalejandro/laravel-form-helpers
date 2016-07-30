@@ -1,6 +1,5 @@
 <?php
 
-use Sahib\Form\Form;
 use Illuminate\Database\Eloquent\Model;
 
 class InputTest extends TestCase
@@ -17,10 +16,8 @@ class InputTest extends TestCase
     /** @test */
     public function it_generates_valid_attributes()
     {
-        $form = app(Form::class);
-
-        $this->assertEquals('name="name" value=""', $form->input('name'));
-        $this->assertEquals('name="name" value="default"', $form->input('name', 'default'));
+        $this->assertBladeRender('name="name" value=""', "@input('name')");
+        $this->assertBladeRender('name="name" value="default"', "@input('name', 'default')");
     }
 
     /** @test */
@@ -29,11 +26,10 @@ class InputTest extends TestCase
         $model = $this->prophesize(Model::class);
         $model->getAttribute('name')->willReturn(null);
 
-        $form = app(Form::class);
-        $form->model($model->reveal());
+        $viewData = ['model' => $model->reveal()];
 
-        $this->assertEquals('name="name" value=""', $form->input('name'));
-        $this->assertEquals('name="name" value="default"', $form->input('name', 'default'));
+        $this->assertBladeRender('name="name" value=""', '@form($model) @input("name")', $viewData);
+        $this->assertBladeRender('name="name" value="default"', '@form($model) @input("name", "default")', $viewData);
     }
 
     /** @test */
@@ -41,9 +37,7 @@ class InputTest extends TestCase
     {
         $this->session(['_old_input' => ['name' => 'Old John Doe']]);
 
-        $form = app(Form::class);
-
-        $this->assertEquals('name="name" value="Old John Doe"', $form->input('name'));
+        $this->assertBladeRender('name="name" value="Old John Doe"', "@input('name')");
     }
 
     /** @test */
@@ -51,24 +45,22 @@ class InputTest extends TestCase
     {
         $this->session(['_old_input' => ['name' => 'Old John Doe']]);
 
-        $form = app(Form::class);
-
         $model = $this->prophesize(Model::class);
         $model->getAttribute('name')->willReturn('John Doe');
-        $form->model($model->reveal());
 
-        $this->assertEquals('name="name" value="Old John Doe"', $form->input('name'));
+        $viewData = ['model' => $model->reveal()];
+
+        $this->assertBladeRender('name="name" value="Old John Doe"', '@form($model) @input("name")', $viewData);
     }
 
     /** @test */
     public function it_generates_valid_attributes_when_model_exists()
     {
-        $form = app(Form::class);
-
         $model = $this->prophesize(Model::class);
         $model->getAttribute('name')->willReturn('John Doe');
-        $form->model($model->reveal());
 
-        $this->assertEquals('name="name" value="John Doe"', $form->input('name'));
+        $viewData = ['model' => $model->reveal()];
+
+        $this->assertBladeRender('name="name" value="John Doe"', '@form($model) @input("name")', $viewData);
     }
 }
