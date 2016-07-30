@@ -154,7 +154,7 @@ class Form
         }
 
         if ($errors && $errors->has($name)) {
-            return str_replace(':message', $errors->first('name'), $template);
+            return str_replace(':message', e($errors->first($name)), $template);
         }
     }
 
