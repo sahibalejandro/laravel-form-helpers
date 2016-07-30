@@ -1,4 +1,9 @@
 # Laravel Form Helpers
+[![Build Status](https://travis-ci.org/sahibalejandro/laravel-form-helpers.svg?branch=master)](https://travis-ci.org/sahibalejandro/laravel-form-helpers)
+[![Latest Stable Version](https://poser.pugx.org/sahibalejandro/laravel-form-helpers/v/stable)](https://packagist.org/packages/sahibalejandro/laravel-form-helpers)
+[![Total Downloads](https://poser.pugx.org/sahibalejandro/laravel-form-helpers/downloads)](https://packagist.org/packages/sahibalejandro/laravel-form-helpers)
+[![License](https://poser.pugx.org/sahibalejandro/laravel-form-helpers/license)](https://packagist.org/packages/sahibalejandro/laravel-form-helpers)
+
 A set of blade directives that will help you to fill forms using
 the _old input_ or an eloquent model instance, also it helps you to
 display validation errors in a easy way.
