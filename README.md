@@ -4,28 +4,42 @@
 [![Total Downloads](https://poser.pugx.org/sahibalejandro/laravel-form-helpers/downloads)](https://packagist.org/packages/sahibalejandro/laravel-form-helpers)
 [![License](https://poser.pugx.org/sahibalejandro/laravel-form-helpers/license)](https://packagist.org/packages/sahibalejandro/laravel-form-helpers)
 
-A set of blade directives that will help you to fill forms using
-the _old input_ or an eloquent model instance, also it helps you to
-display validation errors in a easy way.
+A set of blade directives that automatically fill forms using the
+[old input](https://laravel.com/docs/5.2/requests#old-input)
+or an [Eloquent](https://laravel.com/docs/5.2/eloquent)
+model, it also helps you to display
+[validation error messages](https://laravel.com/docs/5.2/validation#working-with-error-messages)
+in a clean and easy way.
 
 ## Example
 See how easy is to do cool stuff with these directives, for example
-if you are using Bootstrap for your markup, you can do something like this:
+if you are using [Bootstrap](https://getbootstrap.com) for your markup, you can do something like this:
 
 ```blade
-<div class="form-group @error('name', 'has-error')">
-    <input type="text" @input('name')>
-    @error('name')
-</div>
+<form action="/users" method="POST">
+
+    @form($model)
+    
+    <div class="form-group @error('name', 'has-error')">
+        <input type="text" @input('name')>
+        @error('name')
+    </div>
+    
+</form>
 ```
 
-And in the case of an error the result will be:
+And in the case of the user is redirected back with errors,
+the result will be:
 
 ```html
-<div class="form-group has-error">
-    <input type="text" name="name" value="Bad Name">
-    <div class="help-block">Error message</div>
-</div>
+<form action="/users" method="POST">
+
+    <div class="form-group has-error">
+        <input type="text" name="name" value="Bad Name">
+        <div class="help-block">Error message</div>
+    </div>
+    
+</form>
 ```
 
 ¡It's _awesame_!
@@ -36,7 +50,7 @@ Installation
 Install with composer, just run the command:
 
 ```sh
-composer require sahibalejandro/laravel-form-helpers --prefer-dist
+composer require sahibalejandro/laravel-form-helpers
 ```
 
 Then add the service provider to your `config/app.php` file:
@@ -54,7 +68,11 @@ Usage
 
 ### @form
 
-Use the `@form` directive to bind a model to your form:
+`@form([ Model $model = null ])`
+
+Use the optional `@form` directive to bind a model to your form.  
+Ignore this directive if you just want the [old input](https://laravel.com/docs/5.2/requests#old-input) binding
+and no the model binding.
 
 ```blade
 <form action="/users/123" method="POST">
@@ -62,9 +80,9 @@ Use the `@form` directive to bind a model to your form:
 </form>
 ```
     
-This directive is optional, use it only when you want bind a model.
-    
 ### @input
+
+`@input(string $attribute [, string $default = null ])`
 
 Use the `@input` directive to assign the value to an input field:
 
@@ -82,7 +100,9 @@ This will result in the following markup:
     
 ### @text
 
-Use the `@text` directive to assign the value to an textarea field:
+`@text(string $attribute [, string $default = null ])`
+
+Use the `@text` directive to assign the value to a textarea field:
 
 ```blade
 <textarea name="description">@text('description')</textareas>
@@ -98,12 +118,16 @@ This will result in the following markup:
 
 ### @checkbox
 
+`@checkbox(string $attribute [, mixed $value = 1 [, boolean $checked = false ]])`
+
 Use the `@checkbox` to set the value and the state of a checkbox:
 
 ```blade
 <input type="checkbox" @checkbox('remember_me')>
+
 <!-- With a custom value -->
 <input type="checkbox" @checkbox('newsletter', 'yes')>
+
 <!-- Activate the checkbox by default -->
 <input type="checkbox" @checkbox('send_sms', 1, true)>
 ```
@@ -112,11 +136,17 @@ This will result in the following markup:
 
 ```html
 <input type="checkbox" name="remember_me" value="1">
+
+<!-- With a custom value -->
 <input type="checkbox" name="newsletter" value="yes">
+
+<!-- Activate the checkbox by default -->
 <input type="checkbox" name="send_sms" value="1" checked>
 ```
 
 ### @radio
+
+`@radio(string $attribute [, mixed $value = 1 [, boolean $checked = false ]])`
 
 The `@radio` directive is used in the same way as `@checkbox` directive, in fact
 is just an alias:
@@ -136,6 +166,8 @@ This will result in the following markup:
 ```
 
 ### @options
+
+`@options(array $options, string $attribute [, mixed $default = null [, string $placeholder = null ]])`
 
 Use the `@options` directive to display a list of options for a select field.
 Let's say we pass an array named `$cardTypes` to the view and use it with the `@options`
@@ -204,7 +236,10 @@ The result will be:
 
 ### @error
 
-Use the `@error` directive to display a validation error:
+`@error(string $attribute [, string $template = null ])`
+
+Use the `@error` directive to display a validation error message, this directive will check for you if the error
+exists or not.
 
 ```blade
 <input type="text" @input('name')>
@@ -218,7 +253,7 @@ Then when the user is redirected back with errors, the result will be:
 <div class="help-block">The name field fails validation.</div>
 ```
 
-Note that the `@error` directive is Bootstrap friendly by default,
+Note that the `@error` directive is [Bootstrap](https://getbootstrap.com) friendly by default,
 but you can define a custom template:
 
 ```blade
@@ -232,7 +267,7 @@ And the result will be:
 ```
 
 See how easy is to do cool stuff with `@error` directive, for example
-if you are using Bootstrap for your markup, you can do something like this:
+if you are using [Bootstrap](https://getbootstrap.com) for your markup, you can do something like this:
 
 ```blade
 <div class="form-group @error('name', 'has-error')">
@@ -241,7 +276,7 @@ if you are using Bootstrap for your markup, you can do something like this:
 </div>
 ```
 
-And in the case of an error the result will be:
+And in the case the user is redirected back with errors, the result will be:
 
 ```html
 <div class="form-group has-error">
