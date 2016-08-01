@@ -1,7 +1,7 @@
 {
     "name": "sahibalejandro/laravel-form-helpers",
-    "description": "Blade directives to set form values, form model binding couldn't be easier.",
-    "keywords": ["laravel", "form", "html", "eloquent"],
+    "description": "Handle form model binding, old input binding and validation error messages in a clean and easy way.",
+    "keywords": ["laravel", "form", "html", "eloquent", "input", "validation", "session", "helpers"],
     "license": "MIT",
     "authors": [
         {

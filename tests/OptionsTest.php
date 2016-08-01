@@ -8,13 +8,25 @@ class OptionsTest extends TestCase
     /** @test */
     public function it_generates_options()
     {
-        $viewData = ['options' => ['option_value' => 'Option Text']];
+        $viewData = ['options' => [
+            'option_a' => 'Option A',
+            'option_b' => 'Option B',
+        ], 'default' => ['option_a', 'option_b']];
 
-        $html = '<option value="option_value">Option Text</option>';
+        // No selected option
+        $html = '<option value="option_a">Option A</option>';
+        $html .= '<option value="option_b">Option B</option>';
         $this->assertBladeRender($html, '@options($options, "select")', $viewData);
 
-        $html = '<option value="option_value" selected>Option Text</option>';
-        $this->assertBladeRender($html, '@options($options, "select", "option_value")', $viewData);
+        // Default selected option
+        $html = '<option value="option_a">Option A</option>';
+        $html .= '<option value="option_b" selected>Option B</option>';
+        $this->assertBladeRender($html, '@options($options, "select", "option_b")', $viewData);
+
+        // Multiple default selected options
+        $html = '<option value="option_a" selected>Option A</option>';
+        $html .= '<option value="option_b" selected>Option B</option>';
+        $this->assertBladeRender($html, '@options($options, "select", $default)', $viewData);
     }
 
     /** @test */
@@ -36,30 +48,57 @@ class OptionsTest extends TestCase
 
         $viewData = [
             'model' => $model->reveal(),
-            'options' => ['option_value' => 'Option Text'],
+            'default' => ['option_a', 'option_b'],
+            'options' => [
+                'option_a' => 'Option A',
+                'option_b' => 'Option B',
+            ],
         ];
 
-        $html = '<option value="option_value">Option Text</option>';
+        // No selected option
+        $html = '<option value="option_a">Option A</option>';
+        $html .= '<option value="option_b">Option B</option>';
         $this->assertBladeRender($html, '@form($model) @options($options, "select")', $viewData);
 
-        $html = '<option value="option_value" selected>Option Text</option>';
-        $this->assertBladeRender($html, '@form($model) @options($options, "select", "option_value")', $viewData);
+        // Default selected option
+        $html = '<option value="option_a">Option A</option>';
+        $html .= '<option value="option_b" selected>Option B</option>';
+        $this->assertBladeRender($html, '@form($model) @options($options, "select", "option_b")', $viewData);
+
+        // Multiple default selected options
+        $html = '<option value="option_a" selected>Option A</option>';
+        $html .= '<option value="option_b" selected>Option B</option>';
+        $this->assertBladeRender($html, '@form($model) @options($options, "select", $default)', $viewData);
     }
 
     /** @test */
     public function it_generates_options_when_the_model_exists()
     {
         $model = $this->prophesize(Model::class);
-        $model->getAttribute('select')->willReturn('option_value');
+        $model->getAttribute('select')->willReturn('option_b');
+        $model->getAttribute('select_multiple')->willReturn(['option_b', 'option_a']);
 
         $viewData = [
             'model' => $model->reveal(),
-            'options' => ['option_value' => 'Option Text'],
+            'default' => ['option_a', 'option_b'],
+            'options' => [
+                'option_a' => 'Option A',
+                'option_b' => 'Option B',
+            ],
         ];
 
-        $html = '<option value="option_value" selected>Option Text</option>';
+        // Selected option
+        $html = '<option value="option_a">Option A</option>';
+        $html .= '<option value="option_b" selected>Option B</option>';
         $this->assertBladeRender($html, '@form($model) @options($options, "select")', $viewData);
-        $this->assertBladeRender($html, '@form($model) @options($options, "select", "default_value")', $viewData);
+
+        // Ignore the default value because the model has the selected option
+        $this->assertBladeRender($html, '@form($model) @options($options, "select", "option_a")', $viewData);
+
+        // Multiple selected options
+        $html = '<option value="option_a" selected>Option A</option>';
+        $html .= '<option value="option_b" selected>Option B</option>';
+        $this->assertBladeRender($html, '@form($model) @options($options, "select_multiple")', $viewData);
     }
 
     /** @test */

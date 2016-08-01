@@ -123,11 +123,13 @@ class Form
             $tags[] = '<option value="" selected disabled>'.e($placeholder).'</option>';
         }
 
-        $value = $this->value($name, $default);
+        // Cast $default and $value to an array in order to support selects with
+        // multiple options selected.
+        $value = (array) $this->value($name, (array) $default);
 
         foreach ($options as $key => $text) {
 
-            $selected = $value == $key ? ' selected' : '';
+            $selected = in_array($key, $value) ? ' selected' : '';
             $key = e($key);
             $text = e($text);
 

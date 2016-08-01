@@ -170,6 +170,9 @@ This will result in the following markup:
 `@options(array $options, string $attribute [, mixed $default = null [, string $placeholder = null ]])`
 
 Use the `@options` directive to display a list of options for a select field.
+
+_Note: It also works with **select multiple** fields when the model's attribute, old input or `$default` value is an array._
+
 Let's say we pass an array named `$cardTypes` to the view and use it with the `@options`
 directive:
 
