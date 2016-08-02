@@ -152,7 +152,7 @@ class Form
 
         // Default template is bootstrap friendly.
         if (is_null($template)) {
-            $template = '<div class="help-block">:message</div>';
+            $template = config('form-helpers.error_template');
         }
 
         if ($errors && $errors->has($name)) {

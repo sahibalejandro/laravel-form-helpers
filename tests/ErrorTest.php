@@ -20,6 +20,18 @@ class ErrorTest extends TestCase
         $this->assertBladeRender('<span>Error Message</span>', "@error('field_name', '<span>:message</span>')");
     }
 
+    public function test_display_error_with_custom_template_defined_in_config()
+    {
+        $originalConfig = config('form-helpers.error_template');
+
+        config(['form-helpers.error_template' => '<error>:message</error>']);
+
+        $this->withError('field_name', 'Error Message');
+        $this->assertBladeRender('<error>Error Message</error>', "@error('field_name')");
+
+        config(['form-helpers.error_template' => $originalConfig]);
+    }
+
     public function test_escape_error()
     {
         $this->withError('field_name', '<html>');

@@ -8,14 +8,45 @@ use Illuminate\Support\ServiceProvider;
 class FormServiceProvider extends ServiceProvider
 {
     /**
+     * Get configuration file path.
+     *
+     * @return string
+     */
+    protected function configFile()
+    {
+        return __DIR__.'/config/form-helpers.php';
+    }
+
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->publishes([
+            $this->configFile() => config_path('form-helpers.php'),
+        ]);
+    }
+
+    /**
      * Register the service provider.
      *
      * @return void
      */
     public function register()
     {
+        $this->mergeConfig();
         $this->registerBindings();
         $this->registerBladeDirectives();
+    }
+
+    /**
+     * Merge package configuration file with the application's copy.
+     */
+    protected function mergeConfig()
+    {
+        $this->mergeConfigFrom($this->configFile(), 'form-helpers');
     }
 
     /**

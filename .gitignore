@@ -1,3 +1,5 @@
 /.idea
 /vendor
 composer.lock
+*.sublime-project
+*.sublime-workspace

@@ -63,6 +63,18 @@ Then add the service provider to your `config/app.php` file:
 
 That's all.
 
+Configuration
+-------------
+
+Optionally you can publish the configuration file with this command:
+
+~~~sh
+php artisan vendor:publish --provider=Sahib\Form\FormServiceProvider
+~~~
+
+After that you can edit the `config/form-helpers.php` file.
+
+
 Usage
 -----
 
@@ -256,8 +268,7 @@ Then when the user is redirected back with errors, the result will be:
 <div class="help-block">The name field fails validation.</div>
 ```
 
-Note that the `@error` directive is [Bootstrap](https://getbootstrap.com) friendly by default,
-but you can define a custom template:
+Note that the `@error` directive is [Bootstrap](https://getbootstrap.com) friendly by default, but you can define a custom template inline or in the config file:
 
 ```blade
 @error('name', '<span class="error">:message</span>')
