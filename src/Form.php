@@ -167,13 +167,13 @@ class Form
      * @param  mixed|null $default
      * @return mixed|null
      */
-    protected function value($name, $default = null)
+    public function value($name, $default = null)
     {
-        if ($value = $this->valueFromOld($name)) {
+        if (! is_null($value = $this->valueFromOld($name))) {
             return $value;
         }
 
-        if ($value = $this->valueFromModel($name)) {
+        if (! is_null($value = $this->valueFromModel($name))) {
             return $value;
         }
 
