@@ -65,32 +65,49 @@ class FormServiceProvider extends ServiceProvider
     protected function registerBladeDirectives()
     {
         Blade::directive('form', function ($expression) {
-            $expression = $expression ?: '()';
+            $expression = $this->addParenthesis($expression);
             return "<?php app('sahib_form')->model{$expression}; ?>";
         });
 
         Blade::directive('input', function ($expression) {
+            $expression = $this->addParenthesis($expression);
             return "<?php echo app('sahib_form')->input{$expression}; ?>";
         });
 
         Blade::directive('text', function ($expression) {
+            $expression = $this->addParenthesis($expression);
             return "<?php echo app('sahib_form')->text{$expression}; ?>";
         });
 
         Blade::directive('checkbox', function ($expression) {
+            $expression = $this->addParenthesis($expression);
             return "<?php echo app('sahib_form')->checkbox{$expression}; ?>";
         });
 
         Blade::directive('radio', function ($expression) {
+            $expression = $this->addParenthesis($expression);
             return "<?php echo app('sahib_form')->radio{$expression}; ?>";
         });
 
         Blade::directive('options', function ($expression) {
+            $expression = $this->addParenthesis($expression);
             return "<?php echo app('sahib_form')->options{$expression}; ?>";
         });
 
         Blade::directive('error', function ($expression) {
+            $expression = $this->addParenthesis($expression);
             return "<?php echo app('sahib_form')->error{$expression}; ?>";
         });
+    }
+
+    /**
+     * Add parenthesis to the expression in order to support Laravel 5.2 and 5.3
+     *
+     * @param  string $expression
+     * @return string
+     */
+    protected function addParenthesis($expression)
+    {
+        return starts_with($expression, '(') ? $expression : "($expression)";
     }
 }
