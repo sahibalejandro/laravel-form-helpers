@@ -27,6 +27,8 @@ class FormServiceProvider extends ServiceProvider
         $this->publishes([
             $this->configFile() => config_path('form-helpers.php'),
         ]);
+
+        $this->registerBladeDirectives();
     }
 
     /**
@@ -38,7 +40,6 @@ class FormServiceProvider extends ServiceProvider
     {
         $this->mergeConfig();
         $this->registerBindings();
-        $this->registerBladeDirectives();
     }
 
     /**
